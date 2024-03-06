@@ -5,18 +5,15 @@ import jsonwebtoken from 'jsonwebtoken';
 import Account from '../models/accountModel.js';
 
 router.post('/signup',(req,res) => {
-    //1. Get the user credentials
+   
     const {firstName,lastName,email,password} = req.body;
 
-    //2. check if email available
+   
     Account.findAll({where: {email:email}})
     .then(async results => {
-        if(results.length == 0){
-          //3. Handle password hash
+        if(results.length == 0) {
           const hash = await bcryptjs.hash(password, 10);
-          //4. Generate verification code
           const code = Math.floor(1000 + Math.random() * 9000);
-          //5. Store the new account in db
           Account.create({
             firstName: firstName,
             lastName: lastName,
@@ -25,7 +22,7 @@ router.post('/signup',(req,res) => {
             verificationCode: code,
             isVerified: false
           })
-          //6. Response
+         
           .then(account_created => {
             return res.status(200).json({
                 message: account_created
@@ -48,6 +45,20 @@ router.post('/signup',(req,res) => {
         })
     })
 });
+
+router.get('/users', (req,res) => {
+    Account.findAll()
+    .then(results =>{
+      return res.status(200).json({
+        message: results
+      })
+    })
+    .catch(error => {
+      return res.status(500).json({
+        message: error
+    })
+    })
+})
 
 router.post('/verify',(req,res) => {});
 

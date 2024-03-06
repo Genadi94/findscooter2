@@ -1,13 +1,30 @@
 import express from "express";
 import dotenv from 'dotenv';
+import swaggerJSDoc from "swagger-jsdoc";
+import  SwaggerUi from "swagger-ui-express";
 import accountController from './controllers/accountController.js'
 import database from './services/database.js';
+
 
 dotenv.config();
 const app = express();
 
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
+
+
+const swaggerOptions = {
+    definition: {
+        openapi: '3.0.0',
+        info: {
+            title: 'Findscooter API Documentation',
+            description: 'This is my first Swagger documentation'
+        },
+    },
+    apis: ['']
+}
+
+
 
 app.use('/api/account',accountController);
 
